@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thumbnail Rebranding — Educatum School · Soykot</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Space+Mono:wght@400;700&family=Anton&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --card: #151515;
+    --accent: #ff3cac;
+    --accent2: #784ba0;
+    --accent3: #2b86c5;
+    --text: #f0f0f0;
+    --muted: #666;
+    --border: rgba(255,255,255,0.06);
+    --body-size: 1.25rem;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CURSOR ── */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent); border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    opacity: 0; mix-blend-mode: difference;
+    will-change: transform;
+  }
+  .cursor-follower {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,60,172,0.4); border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    opacity: 0; will-change: transform;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 22px 70px;
+    display: flex; justify-content: space-between; align-items: center;
+    backdrop-filter: blur(14px);
+    background: rgba(10,10,10,0.75);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    text-decoration: none;
+  }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Space Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    transition: color 0.3s; cursor: none;
+    border: 1px solid var(--border); padding: 10px 20px; border-radius: 100px;
+  }
+  .back-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── HERO / PROJECT INTRO ── */
+  .project-intro {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 120px 70px 80px;
+    gap: 80px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .intro-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 70% at 20% 50%, rgba(120,75,160,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 90% 80%, rgba(43,134,197,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Left — title + desc */
+  .intro-text {
+    position: relative; z-index: 2;
+    opacity: 0; transform: translateX(-40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+    order: 1;
+  }
+  .intro-text.visible { opacity: 1; transform: translateX(0); }
+
+  /* Right — large image */
+  .intro-visual {
+    position: relative; z-index: 2;
+    opacity: 0; transform: translateX(40px);
+    transition: opacity 0.9s 0.15s ease, transform 0.9s 0.15s ease;
+    order: 2;
+  }
+  .intro-visual.visible { opacity: 1; transform: translateX(0); }
+
+  .hero-image-wrap {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: none;
+    aspect-ratio: 4/3;
+    background: transparent;
+  }
+  .hero-image-wrap::before { display: none; }
+  .hero-image-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    position: relative; z-index: 1;
+  }
+  /* Placeholder shown when image missing */
+  .hero-img-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1020 50%, #0f0f0f 100%);
+    position: absolute; inset: 0; z-index: 0;
+  }
+  .hero-img-placeholder-icon {
+    font-size: 4rem; opacity: 0.15; line-height: 1;
+  }
+  .hero-img-placeholder-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; color: rgba(255,255,255,0.1);
+    letter-spacing: 6px;
+  }
+  .hero-img-placeholder-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase;
+  }
+
+  .project-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 4px;
+    color: var(--accent); text-transform: uppercase;
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 24px;
+  }
+  .project-eyebrow::before { content: ''; width: 30px; height: 1px; background: var(--accent); }
+
+  .project-title-main {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 5vw, 80px);
+    line-height: 0.92;
+    margin-bottom: 32px;
+    background: linear-gradient(to bottom, #888 0%, #fff 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .project-description {
+    font-size: var(--body-size);
+    color: #aaa; line-height: 1.9;
+    margin-bottom: 40px;
+    border-left: 2px solid var(--accent);
+    padding-left: 20px;
+  }
+
+  .project-meta-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2px; margin-bottom: 40px;
+  }
+  .meta-box {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 18px 20px;
+  }
+  .meta-box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.56rem; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .meta-box-value {
+    font-size: var(--body-size); font-weight: 500; color: var(--text);
+  }
+
+  .scroll-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+    animation: bounce 2s ease-in-out infinite;
+    cursor: none; text-decoration: none;
+  }
+  .scroll-cta::after { content: '↓'; font-size: 1rem; }
+  @keyframes bounce {
+    0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)}
+  }
+
+  /* ── GALLERY SECTION ── */
+  .gallery-section {
+    padding: 100px 70px 140px;
+    position: relative;
+  }
+
+  .gallery-section-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .gallery-section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 90px);
+    line-height: 0.9;
+    background: linear-gradient(to bottom, #888 0%, #fff 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .gallery-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase;
+    text-align: right;
+  }
+
+  /* Gallery grid */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+  }
+
+  /* First image spans 2 columns — featured */
+  .gallery-item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: none;
+    transition: border-color 0.3s;
+  }
+  .gallery-item:first-child {
+    grid-column: span 1;
+    aspect-ratio: 16/9;
+  }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.5s ease;
+  }
+  .gallery-item:hover img { transform: scale(1.05); }
+  .gallery-item:hover { border-color: rgba(255,60,172,0.3); }
+
+  /* Placeholder state when no image yet */
+  .gallery-item .img-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--surface), var(--card));
+  }
+  .img-placeholder-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem; color: rgba(255,255,255,0.06);
+    line-height: 1;
+  }
+  .img-placeholder-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 3px;
+    color: var(--muted); text-transform: uppercase;
+  }
+
+  /* Overlay on hover */
+  .gallery-item-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; align-items: flex-end; padding: 20px;
+  }
+  .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+  .overlay-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 2px;
+    color: rgba(255,255,255,0.85); text-transform: uppercase;
+    background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 100px;
+  }
+
+  /* ── LIGHTBOX ── */
+  .lb {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.96); z-index: 10000;
+    backdrop-filter: blur(14px);
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 80px 60px 50px;
+  }
+  .lb.open { display: flex; }
+  .lb-img-wrap {
+    flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;
+  }
+  .lb-img-wrap img {
+    max-width: 100%; max-height: 72vh;
+    border-radius: 12px; display: block;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.9);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .lb-img-wrap img.fading { opacity: 0; transform: scale(0.97); }
+  .lb-bar {
+    width: 100%; display: flex; justify-content: space-between; align-items: center;
+    padding-top: 22px; border-top: 1px solid var(--border); margin-top: 20px;
+  }
+  .lb-caption {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 2px; color: var(--muted); text-transform: uppercase; max-width: 55%;
+  }
+  .lb-controls { display: flex; align-items: center; gap: 14px; }
+  .lb-btn {
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text); font-size: 1rem; cursor: none;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .lb-btn:hover { border-color: var(--accent); background: rgba(255,60,172,0.1); }
+  .lb-counter {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 2px; color: var(--muted);
+  }
+  .lb-close {
+    position: fixed; top: 26px; right: 40px;
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 2px; color: var(--muted);
+    cursor: none; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px; transition: color 0.2s;
+  }
+  .lb-close:hover { color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 34px 70px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  footer span {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+  }
+  footer a {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 2px; color: var(--accent);
+    text-decoration: none; cursor: none; text-transform: uppercase;
+  }
+
+  /* Neon glow animations */
+  @keyframes neonPulse {
+    0%,100% { box-shadow: 0 0 8px rgba(255,60,172,0.3), 0 0 20px rgba(255,60,172,0.1); }
+    50%      { box-shadow: 0 0 16px rgba(255,60,172,0.5), 0 0 40px rgba(255,60,172,0.2); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 20px; }
+    .project-intro { grid-template-columns: 1fr; padding: 100px 20px 60px; gap: 50px; }
+    .gallery-section { padding: 60px 20px 80px; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item:first-child { grid-column: span 1; aspect-ratio: 16/9; }
+    .gallery-section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
+    .project-meta-row { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .gallery-grid { grid-template-columns: 1fr; }
+    .gallery-item:first-child { grid-column: span 1; aspect-ratio: 16/9; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-follower" id="ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">SOYKOT</a>
+  <a href="index.html" class="back-btn">← Back to Portfolio</a>
+</nav>
+
+<!-- ── PROJECT INTRO ── -->
+<section class="project-intro">
+  <div class="intro-bg"></div>
+
+  <!-- LEFT — title + description -->
+  <div class="intro-text" id="introText">
+    <div class="project-eyebrow">Case Study · Project 01</div>
+    <h1 class="project-title-main">Thumbnail<br>Rebranding<br>for EduCatum<br>School</h1>
+    <p class="project-description">Redesigned and optimized video thumbnails for an EdTech platform, resulting in increased engagement and higher view counts across multiple uploads.</p>
+
+    <div class="project-meta-row">
+      <div class="meta-box">
+        <div class="meta-box-label">Client</div>
+        <div class="meta-box-value">Educatum School</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Role</div>
+        <div class="meta-box-value">Graphic Designer</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Platform</div>
+        <div class="meta-box-value">YouTube</div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-box-label">Duration</div>
+        <div class="meta-box-value">Sep – Nov 2025</div>
+      </div>
+    </div>
+
+    <a href="#gallery" class="scroll-cta">View Gallery</a>
+  </div>
+
+  <!-- RIGHT — large hero image -->
+  <div class="intro-visual" id="introVisual">
+    <div class="hero-image-wrap">
+      <img src="p1-s0.png" alt="Project Hero Image" id="heroImg"
+           onerror="this.style.display='none'; document.getElementById('heroPlaceholder').style.display='flex';">
+      <div class="hero-img-placeholder" id="heroPlaceholder">
+        <div class="hero-img-placeholder-icon">🖼️</div>
+        <div class="hero-img-placeholder-name">p1-s0</div>
+        <div class="hero-img-placeholder-text">Place your image here</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── GALLERY ── -->
+<section class="gallery-section" id="gallery">
+  <div class="gallery-section-header">
+    <div class="gallery-section-title">Project<br>Gallery</div>
+    <div class="gallery-count">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--text);line-height:1;">07</div>
+      <div>Thumbnails</div>
+    </div>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid">
+
+    <div class="gallery-item" onclick="openLB(0)">
+      <img src="p1-s1.png" alt="Thumbnail 01" onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'><div class=\'img-placeholder-num\'>01</div><div class=\'img-placeholder-label\'>p1-s1.png</div></div>'">
+      <div class="gallery-item-overlay"><span class="overlay-label">Thumbnail 01</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openLB(1)">
+      <img src="p1-s2.png" alt="Thumbnail 02" onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'><div class=\'img-placeholder-num\'>02</div><div class=\'img-placeholder-label\'>p1-s2.png</div></div>'">
+      <div class="gallery-item-overlay"><span class="overlay-label">Thumbnail 02</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openLB(2)">
+      <img src="p1-s3.png" alt="Thumbnail 03" onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'><div class=\'img-placeholder-num\'>03</div><div class=\'img-placeholder-label\'>p1-s3.png</div></div>'">
+      <div class="gallery-item-overlay"><span class="overlay-label">Thumbnail 03</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openLB(3)">
+      <img src="p1-s4.png" alt="Thumbnail 04" onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'><div class=\'img-placeholder-num\'>04</div><div class=\'img-placeholder-label\'>p1-s4.png</div></div>'">
+      <div class="gallery-item-overlay"><span class="overlay-label">Thumbnail 04</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openLB(4)">
+      <img src="p1-s5.png" alt="Thumbnail 05" onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'><div class=\'img-placeholder-num\'>05</div><div class=\'img-placeholder-label\'>p1-s5.png</div></div>'">
+      <div class="gallery-item-overlay"><span class="overlay-label">Thumbnail 05</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openLB(5)">
+      <img src="p1-s6.png" alt="Thumbnail 06" onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'><div class=\'img-placeholder-num\'>06</div><div class=\'img-placeholder-label\'>p1-s6.png</div></div>'">
+      <div class="gallery-item-overlay"><span class="overlay-label">Thumbnail 06</span></div>
+    </div>
+
+    <div class="gallery-item" onclick="openLB(6)">
+      <img src="p1-s7.png" alt="Thumbnail 07" onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'><div class=\'img-placeholder-num\'>07</div><div class=\'img-placeholder-label\'>p1-s7.png</div></div>'">
+      <div class="gallery-item-overlay"><span class="overlay-label">Thumbnail 07</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb">
+  <div class="lb-close" onclick="closeLB()">✕ &nbsp;Close</div>
+  <div class="lb-img-wrap"><img src="" alt="" id="lbImg"></div>
+  <div class="lb-bar">
+    <div class="lb-caption" id="lbCap">Thumbnail Rebranding — Educatum School</div>
+    <div class="lb-controls">
+      <button class="lb-btn" onclick="navLB(-1)">&#8592;</button>
+      <span class="lb-counter" id="lbCount">1 / 7</span>
+      <button class="lb-btn" onclick="navLB(1)">&#8594;</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Soykot — All Rights Reserved</span>
+  <a href="index.html">← Back to Portfolio</a>
+</footer>
+
+<script>
+  // ── Cursor ──────────────────────────────
+  const cur = document.getElementById('cur');
+  const ring = document.getElementById('ring');
+  let mx=0,my=0,rx=0,ry=0, shown=false;
+  document.addEventListener('mousemove', e => {
+    mx=e.clientX; my=e.clientY;
+    cur.style.transform=`translate(${mx-6}px,${my-6}px)`;
+    if(!shown){ cur.style.opacity='1'; ring.style.opacity='1'; shown=true; }
+  });
+  (function tick(){
+    rx+=(mx-rx-18)*0.12; ry+=(my-ry-18)*0.12;
+    ring.style.transform=`translate(${rx}px,${ry}px)`;
+    requestAnimationFrame(tick);
+  })();
+
+  // ── Scroll reveal ───────────────────────
+  function checkVisible(){
+    ['introText','introVisual'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el) return;
+      const r=el.getBoundingClientRect();
+      if(r.top < window.innerHeight-60) el.classList.add('visible');
+    });
+  }
+  window.addEventListener('scroll', checkVisible, {passive:true});
+  checkVisible();
+  setTimeout(checkVisible, 100);
+
+  // ── Nav bg on scroll ────────────────────
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', ()=>{
+    nav.style.background = window.scrollY > 60
+      ? 'rgba(10,10,10,0.92)' : 'rgba(10,10,10,0.75)';
+  }, {passive:true});
+
+  // ── Lightbox ────────────────────────────
+  const slides = [
+    'p1-s1.png','p1-s2.png','p1-s3.png',
+    'p1-s4.png','p1-s5.png','p1-s6.png','p1-s7.png'
+  ];
+  let ci = 0;
+
+  function openLB(i){ ci=i; render(); document.getElementById('lb').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeLB(){ document.getElementById('lb').classList.remove('open'); document.body.style.overflow=''; }
+  function navLB(d){ ci=(ci+d+slides.length)%slides.length; render(); }
+  function render(){
+    const img=document.getElementById('lbImg');
+    img.classList.add('fading');
+    setTimeout(()=>{ img.src=slides[ci]; img.classList.remove('fading'); }, 180);
+    document.getElementById('lbCount').textContent=`${ci+1} / ${slides.length}`;
+    document.getElementById('lbCap').textContent=`Thumbnail Rebranding — Educatum School · ${String(ci+1).padStart(2,'0')}`;
+  }
+  document.addEventListener('keydown', e=>{
+    if(!document.getElementById('lb').classList.contains('open')) return;
+    if(e.key==='ArrowRight') navLB(1);
+    if(e.key==='ArrowLeft')  navLB(-1);
+    if(e.key==='Escape')     closeLB();
+  });
+  document.getElementById('lb').addEventListener('click', function(e){ if(e.target===this) closeLB(); });
+</script>
+</body>
+</html>
