@@ -1040,120 +1040,132 @@
   /* ─── RESPONSIVE ─────────────────────────── */
   @media (max-width: 900px) {
 
-    /* NAV */
-    nav { padding: 16px 20px; }
-    .nav-links { display: none; }
+    /* ── NAV — show links, smaller ── */
+    nav { padding: 12px 16px; }
+    .nav-links {
+      display: flex !important;
+      gap: 18px;
+      justify-content: center;
+      flex: 1;
+    }
+    .nav-links a { font-size: 0.55rem !important; letter-spacing: 1.5px; }
 
-    /* HERO */
+    /* ── HERO ── */
     #hero { padding: 0; min-height: 100svh; }
     .hero-giant-title {
-      font-size: clamp(40px, 11vw, 90px) !important;
-      top: 80px !important;
-      transform: scaleX(1.05) !important;
-      letter-spacing: 1px;
+      font-size: clamp(28px, 8vw, 55px) !important;
+      top: 70px !important;
+      transform: scaleX(1.02) !important;
+      letter-spacing: 0px;
     }
     .hero-avatar {
-      width: clamp(220px, 60vw, 360px) !important;
+      width: clamp(180px, 55vw, 320px) !important;
       top: 30% !important;
       left: 50% !important;
     }
     .hero-desc {
-      left: 20px !important;
-      bottom: 80px !important;
-      max-width: 160px !important;
+      left: 16px !important;
+      bottom: 70px !important;
+      max-width: 130px !important;
     }
-    .hero-desc p { font-size: var(--body-size) !important; }
-    .hero-cta {
-      right: 20px !important;
-      bottom: 80px !important;
-    }
-    .btn-pill {
-      padding: 14px 28px !important;
-      font-size: var(--body-size) !important;
-      letter-spacing: 2px !important;
-    }
-    .avatar-ring-wrap {
-      width: 320px !important;
-      height: 320px !important;
-    }
+    .hero-desc p { font-size: 0.55rem !important; line-height: 1.5 !important; }
+    .hero-cta { right: 16px !important; bottom: 70px !important; }
+    .btn-pill { padding: 10px 20px !important; font-size: 0.6rem !important; letter-spacing: 1.5px !important; }
+    .avatar-ring-wrap { width: 260px !important; height: 260px !important; }
 
-    /* SECTIONS — padding */
+    /* ── SECTION PADDING ── */
     #clients, #about, #services, #projects, #contact {
-      padding-left: 20px !important;
-      padding-right: 20px !important;
+      padding-left: 16px !important;
+      padding-right: 16px !important;
     }
-    #clients { padding-top: 60px; padding-bottom: 60px; }
-    #about   { padding-top: 60px; padding-bottom: 60px; }
-    #services{ padding-top: 60px; padding-bottom: 60px; }
-    #projects{ padding-top: 60px; padding-bottom: 100px; }
-    #contact { padding-top: 60px; padding-bottom: 60px; }
+    #clients  { padding-top: 40px; padding-bottom: 40px; }
+    #about    { padding-top: 40px; padding-bottom: 40px; }
+    #services { padding-top: 40px; padding-bottom: 40px; }
+    #projects { padding-top: 40px; padding-bottom: 60px; }
+    #contact  { padding-top: 40px; padding-bottom: 40px; }
 
-    /* CLIENTS */
+    /* ── CLIENTS — single row, all 5 side by side ── */
     .clients-logos,
-    .clients-logos-row2 { grid-template-columns: repeat(2, 1fr); }
-    .client-logo { height: 120px; }
-    .client-logo img { width: 70px; height: 70px; }
-    .client-logo-link span { font-size: var(--body-size) !important; }
+    .clients-logos-row2 { grid-template-columns: repeat(5, 1fr) !important; gap: 2px; }
+    .client-logo { height: 70px !important; padding: 6px !important; gap: 4px !important; }
+    .client-logo img { width: 30px !important; height: 30px !important; }
+    .client-logo-link span { font-size: 0.38rem !important; letter-spacing: 0.5px !important; }
 
-    /* ABOUT */
-    #about { grid-template-columns: 1fr !important; gap: 40px; }
-    .about-big-title { font-size: clamp(50px, 14vw, 90px) !important; }
+    /* ── ABOUT ── */
+    #about { grid-template-columns: 1fr !important; gap: 30px; }
+    .about-big-title { font-size: clamp(36px, 12vw, 60px) !important; }
     .about-stats { grid-template-columns: 1fr 1fr; }
-    .about-text { font-size: var(--body-size); }
+    .stat-num { font-size: 2rem !important; }
+    .stat-label { font-size: 0.55rem !important; }
+    .about-text { font-size: 0.8rem !important; }
+    .skills-list { gap: 6px; }
+    .skill-tag { font-size: 0.6rem !important; padding: 5px 12px !important; }
 
-    /* SERVICES */
-    .services-grid { grid-template-columns: 1fr !important; }
-    .section-title { font-size: clamp(40px, 12vw, 80px) !important; }
-    .service-card { padding: 28px; }
-    .service-num { font-size: 2.5rem !important; }
-    .service-name { font-size: 1.8rem !important; }
-    .service-desc { font-size: var(--body-size) !important; }
-    .services-header { flex-direction: column; gap: 16px; margin-bottom: 40px; }
+    /* ── SERVICES — 2 per row (3 rows of 2) ── */
+    .services-grid { grid-template-columns: 1fr 1fr !important; }
+    .services-header { flex-direction: column; gap: 10px; margin-bottom: 30px; }
+    .section-title { font-size: clamp(28px, 9vw, 52px) !important; text-align: left !important; }
+    .service-card { padding: 18px !important; }
+    .service-num { font-size: 1.8rem !important; margin-bottom: 10px !important; }
+    .service-icon { font-size: 1.2rem !important; margin-bottom: 8px !important; }
+    .service-name { font-size: 0.9rem !important; margin-bottom: 8px !important; letter-spacing: 0px !important; }
+    .service-desc { font-size: 0.62rem !important; line-height: 1.6 !important; }
 
-    /* PROJECTS */
-    .projects-header { flex-direction: column; gap: 10px; margin-bottom: 50px; }
+    /* ── PROJECTS — side by side layout ── */
+    .projects-header { flex-direction: row; gap: 10px; margin-bottom: 30px; align-items: center; }
     .projects-stack { padding: 0 !important; max-width: 100% !important; }
     .project-card {
       position: relative !important;
       top: auto !important;
-      margin-bottom: 20px !important;
-      border-radius: 16px !important;
+      margin-bottom: 14px !important;
+      border-radius: 12px !important;
     }
-    .project-inner { grid-template-columns: 1fr !important; }
-    .project-info { padding: 24px !important; }
-    .project-num { font-size: var(--body-size) !important; }
-    .project-client { font-size: var(--body-size) !important; }
-    .project-title { font-size: 1.8rem !important; }
-    .project-desc { font-size: var(--body-size) !important; }
-    .project-tag { font-size: var(--body-size) !important; }
-    .project-cta { font-size: var(--body-size) !important; padding: 10px 20px !important; margin-top: 20px !important; }
-    .project-visual { min-height: 180px; display: block; }
-    .project-img-placeholder { height: 180px; }
-    .project-visual-overlay { font-size: 3rem; }
+    /* Keep side-by-side: text left, image right */
+    .project-inner { grid-template-columns: 1fr 1fr !important; min-height: 0 !important; }
+    .project-info { padding: 14px !important; }
+    .project-meta { margin-bottom: 8px !important; gap: 6px !important; }
+    .project-num { font-size: 0.65rem !important; }
+    .project-client { font-size: 0.45rem !important; letter-spacing: 1px !important; }
+    .project-title { font-size: 0.85rem !important; margin-bottom: 6px !important; line-height: 1.1 !important; }
+    .project-desc { font-size: 0.58rem !important; line-height: 1.5 !important; }
+    .project-tags { gap: 4px !important; margin-top: 8px !important; }
+    .project-tag { font-size: 0.45rem !important; padding: 3px 8px !important; }
+    .project-cta { font-size: 0.5rem !important; padding: 7px 14px !important; margin-top: 10px !important; letter-spacing: 1px !important; }
+    .project-visual { min-height: 120px !important; }
 
-    /* CONTACT */
-    .contact-title { font-size: clamp(42px, 14vw, 80px) !important; }
-    .contact-email { font-size: clamp(12px, 4vw, 22px) !important; word-break: break-all; }
-    .contact-socials { gap: 10px; flex-wrap: wrap; justify-content: center; }
+    /* ── CONTACT ── */
+    .contact-title { font-size: clamp(30px, 11vw, 60px) !important; }
+    .contact-sub { font-size: 0.75rem !important; }
+    .contact-btn-email, .contact-btn-wa {
+      padding: 14px 24px !important;
+      font-size: 0.65rem !important;
+      letter-spacing: 1.5px !important;
+    }
+    .contact-socials { gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .social-link { font-size: 0.6rem !important; padding: 8px 16px !important; }
 
-    /* FOOTER */
-    footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
+    /* ── FOOTER ── */
+    footer { flex-direction: column; gap: 8px; text-align: center; padding: 20px 16px; }
+    footer span { font-size: 0.5rem !important; }
+
+    /* ── SECTION TAGS ── */
+    .section-tag { font-size: 0.5rem !important; letter-spacing: 2px !important; }
   }
 
-  /* Extra small phones */
+  /* ── Extra small phones ── */
   @media (max-width: 480px) {
-    .hero-giant-title {
-      font-size: clamp(32px, 10vw, 56px) !important;
-    }
-    .hero-avatar {
-      width: clamp(180px, 70vw, 280px) !important;
-    }
-    .clients-logos,
-    .clients-logos-row2 { grid-template-columns: 1fr 1fr; }
-    .about-big-title { font-size: clamp(44px, 16vw, 70px) !important; }
-    .service-name { font-size: 1.5rem !important; }
-    .project-title { font-size: 1.5rem !important; }
-    .contact-title { font-size: clamp(36px, 14vw, 60px) !important; }
+    .nav-links a { font-size: 0.48rem !important; letter-spacing: 1px; }
+    .hero-giant-title { font-size: clamp(22px, 7vw, 40px) !important; }
+    .hero-avatar { width: clamp(160px, 65vw, 260px) !important; }
+    .services-grid { grid-template-columns: 1fr 1fr !important; }
+    .service-name { font-size: 0.78rem !important; }
+    .project-title { font-size: 0.75rem !important; }
+    .contact-title { font-size: clamp(26px, 10vw, 44px) !important; }
+    .about-big-title { font-size: clamp(30px, 11vw, 48px) !important; }
+    /* Clients still single row on tiny phones */
+    .clients-logos, .clients-logos-row2 { grid-template-columns: repeat(5, 1fr) !important; }
+    .client-logo img { width: 22px !important; height: 22px !important; }
+    .client-logo-link span { font-size: 0.32rem !important; }
   }
 </style>
 </head>
